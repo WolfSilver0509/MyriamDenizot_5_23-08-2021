@@ -55,7 +55,7 @@ function quantityProduct() {
 }
 
 const sendBtnProductCart = document.getElementById("addToCart");
-// Evenement sendBtnProductCart, fonction addCart qui active les autres fonction au click
+// Evenement sendBtnProductCart, fonction ProductCard qui active les autres fonction au click
 sendBtnProductCart.addEventListener("click", () => {
   let productQuantity = quantityProduct();
   let colorK = ColorChoice();
