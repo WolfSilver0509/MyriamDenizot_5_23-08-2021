@@ -99,9 +99,13 @@ else {
 
 localStorage.setItem('getProducts', JSON.stringify(getProducts));
 alert('Votre commmande est dans le panier')
-window.location.href = 'cart.html'
+//window.location.href = 'cart.html'
+
+console.log(getProducts);
 
 });
+
+
 
 
 
