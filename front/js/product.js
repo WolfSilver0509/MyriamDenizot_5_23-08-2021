@@ -62,48 +62,47 @@ const sendBtnProductCart = document.getElementById("addToCart");
 sendBtnProductCart.addEventListener("click", () => {
   let quantity = getQuantity();
   let color = getColor();
-  addProductToCart(id, quantity ,color);
   console.log(`la couleur est ${color} et la quantité est de ${quantity}`);
+
+
+// Rajout d'amélioration a partir d'ici dans la fonction du click panier
+
+
+if (quantity < 1){
+  alert(" Vous devez avoir une quantité supérieur à 1 ! ")
+  return;
+}
+
+if (color.length == 0){
+  alert(" Vous devez avoir séléctioné une couleur pour continuer !")
+}
+
+let product = { id, color , quantity };
+let getProducts = [];
+
+
+if (localStorage.getItem('getProducts')){
+  getProducts = JSON.parse(localStorage.getItem("getProducts"));
+
+  let haveProductOnCart = getProducts.find(product => product.id == id && product.color == color);
+  
+  if(haveProductOnCart){
+    haveProductOnCart.quantity = Number(haveProductOnCart.quantity) + Number(quantity);
+    product = haveProductOnCart;
+  } else {
+    getProducts.push(product)
+  } 
+}
+else {
+  getProducts.push(product)
+}
+
+localStorage.setItem('getProducts', JSON.stringify(getProducts));
+alert('Votre commmande est dans le panier')
+window.location.href = 'cart.html'
+
 });
 
-//addProductToCart --> Crée une fonction dans le panier pour ajouter les valeurs récuperer ici .
-
-
-
-// fonction getCart qui permet de mettre dans le local storage
-function getCart() {
-  let selectedProducts = []; // variable selectedProducts avec un tableau vide à remplir
-  if (localStorage.getItem("panier") != null) {
-    selectedProducts = JSON.parse(localStorage.getItem("panier"));
-  }
-  return selectedProducts;
-}
-
-
-function addProductToCart(id, quantity, color) {
-  if (quantity == 0) {
-    return;
-  }
-  let selectedProducts = getCart();
-  if (selectedProducts.length == 0) {
-    selectedProducts = [[id, quantity, color]];
-  } else {
-    let found = false;
-    for (let i = 0; i < selectedProducts.length; i++) {
-      if (id === selectedProducts[i][0] && color === selectedProducts[i][1]) {
-        found = true;
-        selectedProducts[i][2] += quantity;
-      }
-    }
-    if (found == false) {
-      let selectedProduct = [id, quantity, color];
-      selectedProducts.push(selectedProduct);
-    }
-  }
-  localStorage.setItem("panier", JSON.stringify(selectedProducts));
-
-  console.log(selectedProducts); //log recupere tableau 
-}
 
 
 
