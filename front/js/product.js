@@ -1,46 +1,113 @@
-//Récupération url courante //
-let urlcourante = document.location.href;
-// Création d'une variable stockant l'url courante .
-let kanap_id = urlcourante.substring(urlcourante.lastIndexOf("=") + 1);
-//requete API -> promesse//
-const kanap = fetch("http://localhost:3000/api/products");
-kanap.then((response) => { //si ok promesse devient reponse//
-    let kanappromes = response.json();
-    kanappromes.then((kanaptableau) => { // reponse = tableau à boucler pour chercher correspondance entre var product_id et _id du tableau //
-        for (let m = 0; m < kanaptableau.length; m++) {
-            //creation d'objet produit ayant pour parametres les caracteristiques du canapé 
-            let produit = new Object()
-            produit.colors = kanaptableau[m]['colors']
-            produit.id = kanaptableau[m]['_id']
-            produit.name = kanaptableau[m]['name']
-            produit.price = kanaptableau[m]['price']
-            produit.imageUrl = kanaptableau[m]['imageUrl']
-            produit.description = kanaptableau[m]['description']
-            produit.alttxt = kanaptableau[m]['altTxt']
-            
+const str = window.location;
+const url = new URL(str);
+const id = url.searchParams.get("id");
+console.log(" Je renvois l'id du canapé  " + id);
+const objectURL= "http://localhost:3000/api/products/" + id;
+console.log("url fetch récupérer est " + objectURL);
 
-            if (kanap_id == produit.id) {
-                //ajout du code HTML commenté en ajoutant les parametres propre a chaque produit via index m//
-                document.getElementById('title').innerHTML = document.getElementsByTagName('title')[0].innerHTML = produit.name
-                document.getElementById('price').innerHTML = produit.price
-                document.getElementById('description').innerHTML = produit.description
-                document.getElementsByClassName('item__img')[0].innerHTML = '<img src="' + produit.imageUrl + '" alt="' + produit.alttxt + '">'
-                produit.colors.forEach(color => {
-                    document.getElementById('colors').innerHTML += '<option value="' + color + '">' + color + '</option>';
-                });;
-                const button = document.getElementById('addToCart');
-                var select = document.getElementById('colors');
-                button.addEventListener('click', function() {
-                    var color = select.options[select.selectedIndex].value;
-                    var quantity = document.getElementById("quantity").value;
-                    var liste = [produit.name, kanap_id, produit.price, color, quantity]
-                    localStorage.setItem('panier', JSON.stringify(liste))
-                    console.log(liste)
-                });
-            }
+// Création de la fonction qui recupere via le fetch les données dans le Json et les modifies dans le DOM
+let printProductCard = function () {
+    fetch(objectURL)
+      .then((response) => response.json())
+      .then((data) => {
+
+        console.log(data);
+        
+        let img = document.querySelector(".item__img");
+        img.innerHTML = `<img src="${data.imageUrl}" alt="${data.altTxt}">`;
+        
+        let name = document.getElementById("title");
+        name.innerHTML = data.name;
+        let title = document.querySelector("title");
+        title.innerHTML = data.name;
+        
+        let price = document.getElementById("price");
+        price.innerHTML = data.price;
+        
+        let description = document.getElementById("description");
+        description.innerHTML = data.description;
+        
+        let color = document.getElementById("colors");
+        for (i = 0; i < data.colors.length; i++) {
+          color.innerHTML += `<option value="${data.colors[i]}">${data.colors[i]}</option>`;
         }
-    })
-}).catch((err) => { //si requete impossible affichage message d'erreur en place de la liste de produit et message erreur console//
-    document.getElementById('items').innerHTML = 'Désolé un problème est survenu pendant le chargement de notre catalogue.veuillez réessayer ultérieurement'
-    console.log('Problème API');
+      })
+
+      .catch((err) => { //si requete impossible affichage message d'erreur  et message erreur console
+        document.getElementsByClassName('item').innerText = 'Désolé un problème est survenu pendant le chargement du produit.veuillez réessayer ultérieurement'
+        console.log('Problème API Page Produit');
+          });
+  };
+
+
+
+  // Appelle de la fonction crée.
+  printProductCard();
+
+
+  // La fonction qui recupere la valeur de la couleur 
+function getColor() {
+  let color = document.getElementById("colors");
+  return color.value;
+}
+  // La fonction qui recupere la valeur du champs quantity 
+function getQuantity() {
+  let quantity = document.getElementById("quantity");
+  return quantity.value;
+}
+
+
+const sendBtnProductCart = document.getElementById("addToCart");
+// Evenement sendBtnProductCart, fonction printProductCard qui active les autres fonction au click
+sendBtnProductCart.addEventListener("click", () => {
+  let quantity = getQuantity();
+  let color = getColor();
+  console.log(`la couleur est ${color} et la quantité est de ${quantity}`);
+
+
+// Rajout d'amélioration a partir d'ici dans la fonction du click panier
+
+
+if (quantity < 1){
+  alert(" Vous devez avoir une quantité supérieur à 1 ! ")
+  return;
+}
+
+if (color.length == 0){
+  alert(" Vous devez avoir séléctioné une couleur pour continuer !")
+}
+
+let product = { id, color , quantity };
+let getProducts = [];
+
+
+if (localStorage.getItem('getProducts')){
+  getProducts = JSON.parse(localStorage.getItem("getProducts"));
+
+  let haveProductOnCart = getProducts.find(product => product.id == id && product.color == color);
+  
+  if(haveProductOnCart){
+    haveProductOnCart.quantity = Number(haveProductOnCart.quantity) + Number(quantity);
+    product = haveProductOnCart;
+  } else {
+    getProducts.push(product)
+  } 
+}
+else {
+  getProducts.push(product)
+}
+
+localStorage.setItem('getProducts', JSON.stringify(getProducts));
+alert('Votre commmande est dans le panier')
+//window.location.href = 'cart.html'
+
+console.log(getProducts);
+
 });
+
+
+
+
+
+
+
