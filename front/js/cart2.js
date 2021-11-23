@@ -29,28 +29,28 @@ function printProduct() {
   if(productS){ 
 
     for (let product of productS) {
-      cartItems.innerHTML += `
-      <article class="cart__item" data-id="${product._id}" data-colors="${product.color}">
-              <div class="cart__item__img">
-              <img src="${product.imageUrl}" alt="${product.altTxt}">
-              </div>
-              <div class="cart__item__content">
-              <div class="cart__item__content__titlePrice">
-                  <h2>${productS.name}</h2>
-                  <p>${product.price/10}</p>
-              </div>
-              <div class="cart__item__content__settings">
-                  <div class="cart__item__content__settings__quantity">
-                  <p>Qté : ${product.color}</p>
-                  <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
-                  </div>
-                  <div class="cart__item__content__settings__delete">
-                  <p class="deleteItem" id="${product._id}" data-colors="${product.color}">Supprimer</p>
-                  </div>
-              </div>
-              </div>
-          </article>
-      `
+
+      cartItems.innerHTML += 
+      `<article class="cart__item" data-id="${product.id}">
+      <div class="cart__item__img">
+        <img src="${product.printImg}" alt="${product.printAltTxt}">
+      </div>
+      <div class="cart__item__content">
+        <div class="cart__item__content__titlePrice">
+          <h2>${product.printName}</h2>
+          <p>${product.printPrice} €</p>
+        </div>
+        <div class="cart__item__content__settings">
+          <div class="cart__item__content__settings__quantity">
+            <p>Qté : ${product.color} </p>
+            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+          </div>
+          <div class="cart__item__content__settings__delete">
+            <p class="deleteItem">Supprimer</p>
+          </div>
+        </div>
+      </div>
+    </article>`
   }
       
 
