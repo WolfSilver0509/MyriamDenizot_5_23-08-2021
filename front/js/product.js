@@ -4,75 +4,70 @@ var id = url.searchParams.get("id");
 
 console.log(id);
 
-const color = document. querySelector("#colors");
+const color = document.querySelector("#colors");
 const quantity = document.querySelector("#quantity");
 
 getProduct();
 
 // Récupération des products de l'API
 function getProduct() {
-    fetch("http://localhost:3000/api/products/" + id)
+  fetch("http://localhost:3000/api/products/" + id)
     .then((data) => {
-        return data.json();
+      return data.json();
     })
-// Répartition des données de l'API dans le DOM
+    // Répartition des données de l'API dans le DOM
 
-.then(async function (resultatAPI) {
-    product = await resultatAPI;
-    console.table(product);
-    if (product){
+    .then(async function (resultatAPI) {
+      product = await resultatAPI;
+      console.table(product);
+      if (product) {
         productCart(product);
-    }
-})
+      }
+    });
 }
 
-function productCart(){
+function productCart() {
+  let productImg = document.createElement("img");
+  document.querySelector(".item__img").appendChild(productImg);
+  productImg.src = product.imageUrl;
+  productImg.alt = product.altTxt;
 
-    let productImg = document.createElement("img");
-    document.querySelector(".item__img").appendChild(productImg);
-    productImg.src = product.imageUrl;
-    productImg.alt = product.altTxt;
-    
-    let productName = document.getElementById('title');
-    productName.innerHTML = product.name;
+  let productName = document.getElementById("title");
+  productName.innerHTML = product.name;
 
-    let productPrice = document.getElementById('price');
-    productPrice.innerHTML = product.price;
+  let productPrice = document.getElementById("price");
+  productPrice.innerHTML = product.price;
 
-    let productDescription = document.getElementById('description');
-    productDescription.innerHTML = product.description;
+  let productDescription = document.getElementById("description");
+  productDescription.innerHTML = product.description;
 
-    for (let colors of product.colors) {
-        console.log(colors);
-        let productColors = document.createElement("option");
-        document.querySelector("#colors").appendChild(productColors);
-        productColors.value = colors;
-        productColors.innerHTML = colors;
-    }
+  for (let colors of product.colors) {
+    console.log(colors);
+    let productColors = document.createElement("option");
+    document.querySelector("#colors").appendChild(productColors);
+    productColors.value = colors;
+    productColors.innerHTML = colors;
+  }
 
-    addedProductOnCart(product);
- 
+  addedProductOnCart(product);
 }
 
 //Fonction ajouter au panier
 
 function addedProductOnCart(product) {
-    
-    const btnSendToCart = document.getElementById("addToCart");
+  const btnSendToCart = document.getElementById("addToCart");
 
-    //Ecouter le panier avec 2 conditions couleur non nulle et quantité entre 1 et 100
-    btnSendToCart.addEventListener("click", ()=>{
+  //Ecouter le panier avec 2 conditions couleur non nulle et quantité entre 1 et 100
+  btnSendToCart.addEventListener("click", () => {
+    if (quantity.value > 0 && quantity.value <= 100 && quantity.value != 0) {
+      //Recupération du choix de la couleur
+      let colorProduct = color.value;
 
-        if (quantity.value > 0 && quantity.value <=100 && quantity.value != 0){
+      //Recupération du choix de la quantité
+      let quantityProduct = quantity.value;
 
-    //Recupération du choix de la couleur
-    let colorProduct = color.value;
-                
-    //Recupération du choix de la quantité
-    let quantityProduct = quantity.value;
-
-    //Récupération des options du product à ajouter au panier
-    let objProducts = {
+      //Récupération des options du product à ajouter au panier
+      let objProducts = {
         id: id,
         color: colorProduct,
         quantityProduct: Number(quantityProduct),
@@ -80,52 +75,58 @@ function addedProductOnCart(product) {
         productPrice: product.price,
         productDescription: product.description,
         productImg: product.imageUrl,
-        productAltImg: product.altTxt
-    };
-       
-    //Initialisation du local storage
-    let productOnLocalStorage = JSON.parse(localStorage.getItem("product"));
+        productAltImg: product.altTxt,
+      };
 
-    //fenêtre pop-up 
-    const PopUp =() =>{
+      //Initialisation du local storage
+      let productOnLocalStorage = JSON.parse(localStorage.getItem("product"));
 
-        if(window.confirm(`Votre commande de ${quantityProduct} ${product.name} ${colorProduct} est ajoutée au panier
-Pour consulter votre panier, cliquez sur OK`)){
-           // window.location.href ="cart.html";
+      //fenêtre pop-up
+      const PopUp = () => {
+        if (
+          window.confirm(`Votre commande de ${quantityProduct} ${product.name} ${colorProduct} est ajoutée au panier
+Pour consulter votre panier, cliquez sur OK`)
+        ) {
+          // window.location.href ="cart.html";
         }
-    }
+      };
 
-    //Importation dans le local storage
-    //Si le panier comporte déjà au moins 1 product
-    if (productOnLocalStorage) {
-    const resultFind = productOnLocalStorage.find(
-        (el) => el.id === id && el.color === colorProduct);
+      //Importation dans le local storage
+      //Si le panier comporte déjà au moins 1 product
+      if (productOnLocalStorage) {
+        const resultFind = productOnLocalStorage.find(
+          (el) => el.id === id && el.color === colorProduct
+        );
         //Si le product commandé est déjà dans le panier
         if (resultFind) {
-            let newQuantity =
-            parseInt(objProducts.quantityProduct) + parseInt(resultFind.quantityProduct);
-            resultFind.quantityProduct = newQuantity;
-            localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
-            console.table(productOnLocalStorage);
-            PopUp();
-        //Si le produit commandé n'est pas dans le panier
+          let newQuantity =
+            parseInt(objProducts.quantityProduct) +
+            parseInt(resultFind.quantityProduct);
+          resultFind.quantityProduct = newQuantity;
+          localStorage.setItem(
+            "product",
+            JSON.stringify(productOnLocalStorage)
+          );
+          console.table(productOnLocalStorage);
+          PopUp();
+          //Si le produit commandé n'est pas dans le panier
         } else {
-            productOnLocalStorage.push(objProducts);
-            localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
-            console.table(productOnLocalStorage);
-            PopUp();
+          productOnLocalStorage.push(objProducts);
+          localStorage.setItem(
+            "product",
+            JSON.stringify(productOnLocalStorage)
+          );
+          console.table(productOnLocalStorage);
+          PopUp();
         }
-    //Si le panier est vide
-    } else {
-        productOnLocalStorage =[];
+        //Si le panier est vide
+      } else {
+        productOnLocalStorage = [];
         productOnLocalStorage.push(objProducts);
         localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
         console.table(productOnLocalStorage);
         PopUp();
-    }}
-    });
+      }
+    }
+  });
 }
-
-
-
-

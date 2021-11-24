@@ -3,21 +3,18 @@ let productOnLocalStorage = JSON.parse(localStorage.getItem("product"));
 //console.table(productOnLocalStorage);
 const textEmptyCart = document.querySelector("#cart__items");
 
-
 console.log(productOnLocalStorage[0].productName);
 
 // Si le panier est vide
-function getCart(){
- 
-  if (localStorage.getItem("product")){
-    
-    if(productOnLocalStorage.length > 0 ){ 
+function getCart() {
+  if (localStorage.getItem("product")) {
+    if (productOnLocalStorage.length > 0) {
+      // console.log(productOnLocalStorage);
 
-     // console.log(productOnLocalStorage);
-
-       productOnLocalStorage.map(product => {
-        document.getElementById("cart__items").innerHTML +=
-         `   <article class="cart__item" data-id="${product.id}">
+      productOnLocalStorage.map((product) => {
+        document.getElementById(
+          "cart__items"
+        ).innerHTML += `   <article class="cart__item" data-id="${product.id}">
          <div class="cart__item__img">
            <img src="${product.productImg}" alt=${product.productAltImg}>
          </div>
@@ -36,82 +33,68 @@ function getCart(){
              </div>
            </div>
          </div>
-       </article> `
-
-         })
-      
-    }
-
-    else{
-    const emptyCart = `<p>Votre panier est vide</p>`;
-    textEmptyCart.innerHTML = emptyCart;
+       </article> `;
+      });
+    } else {
+      const emptyCart = `<p>Votre panier est vide</p>`;
+      textEmptyCart.innerHTML = emptyCart;
     }
   }
-
-
- 
 }
 
+getCart();
 
-// const doc = document.querySelectorAll(".itemQuantity");
-// // for( let i in doc){
-// //   console.log(doc);
-// // }
-
-// console.log(doc);
-
-  getCart();
-
-  // Changement de la quantité des produits
+// Changement de la quantité des produits
 function changeQuantity() {
   let quantityChanged = document.querySelectorAll(".itemQuantity");
 
-  for (let m = 0; m < quantityChanged.length; m++){
-      quantityChanged[m].addEventListener("change" , (event) => {
-          event.preventDefault();
+  for (let m = 0; m < quantityChanged.length; m++) {
+    quantityChanged[m].addEventListener("change", (event) => {
+      event.preventDefault();
 
-          //Selection de l'element à modifier en fonction de son id ET sa couleur
-          let quantityIsChanged = productOnLocalStorage[m].quantityProduct;
-          let quantityChangedValue = quantityChanged[m].valueAsNumber;
+      //Selection de l'element à modifier en fonction de son id ET sa couleur
+      let quantityIsChanged = productOnLocalStorage[m].quantityProduct;
+      let quantityChangedValue = quantityChanged[m].valueAsNumber;
 
-          const resultFind = productOnLocalStorage.find((el) => el.quantityChangedValue !== quantityIsChanged);
+      const resultFind = productOnLocalStorage.find(
+        (el) => el.quantityChangedValue !== quantityIsChanged
+      );
 
-          resultFind.quantityProduct = quantityChangedValue;
-          productOnLocalStorage[m].quantityProduct = resultFind.quantityProduct;
+      resultFind.quantityProduct = quantityChangedValue;
+      productOnLocalStorage[m].quantityProduct = resultFind.quantityProduct;
 
-          localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
+      localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
 
-          // refresh rapide
-          location.reload();
-      })
+      // refresh rapide
+      location.reload();
+    });
   }
 }
 changeQuantity();
 
 // Suppression des produits
 function deleteProduct() {
-
   let btnDelete = document.querySelectorAll(".deleteItem");
 
-  for (let n = 0; n < btnDelete.length; n++){
-      btnDelete[n].addEventListener("click" , (event) => {
-          event.preventDefault();
+  for (let n = 0; n < btnDelete.length; n++) {
+    btnDelete[n].addEventListener("click", (event) => {
+      event.preventDefault();
 
-          //Selection de l'element à supprimer en fonction de son id ET sa couleur
-          let idDelete = productOnLocalStorage[n].id;
-          let colorDelete = productOnLocalStorage[n].color;
+      //Selection de l'element à supprimer en fonction de son id ET sa couleur
+      let idDelete = productOnLocalStorage[n].id;
+      let colorDelete = productOnLocalStorage[n].color;
 
-          productOnLocalStorage = productOnLocalStorage.filter( el => el.id !== idDelete || el.color !== colorDelete );
-          
-          localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
+      productOnLocalStorage = productOnLocalStorage.filter(
+        (el) => el.id !== idDelete || el.color !== colorDelete
+      );
 
-          //Alerte produit supprimé et refresh
-          alert("Ce produit est supprimé de votre panier");
+      localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
 
-          location.reload();
-      })
+      //Alerte produit supprimé et refresh
+      alert("Ce produit est supprimé de votre panier");
+
+      location.reload();
+    });
   }
 }
 deleteProduct();
-
-
