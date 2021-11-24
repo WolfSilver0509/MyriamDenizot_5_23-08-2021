@@ -21,12 +21,19 @@ function getProduct() {
       product = await resultatAPI;
       console.table(product);
       if (product) {
-        productCart(product);
+        printProductCard(product);
       }
-    });
+    })
+
+    .catch((err) => {
+        //si requete impossible affichage message d'erreur en place de la liste de produit et message erreur console//
+        document.getElementById("item").innertext =
+          "Désolé un problème est survenu pendant le chargement de votre produit .veuillez réessayer ultérieurement";
+        console.log("Problème API page product.js");
+      });
 }
 
-function productCart() {
+function printProductCard() {
   let productImg = document.createElement("img");
   document.querySelector(".item__img").appendChild(productImg);
   productImg.src = product.imageUrl;
@@ -49,12 +56,12 @@ function productCart() {
     productColors.innerHTML = colors;
   }
 
-  addedProductOnCart(product);
+  addProductOnCart(product);
 }
 
 //Fonction ajouter au panier
 
-function addedProductOnCart(product) {
+function addProductOnCart(product) {
   const btnSendToCart = document.getElementById("addToCart");
 
   //Ecouter le panier avec 2 conditions couleur non nulle et quantité entre 1 et 100
@@ -79,15 +86,15 @@ function addedProductOnCart(product) {
       };
 
       //Initialisation du local storage
-      let productOnLocalStorage = JSON.parse(localStorage.getItem("product"));
+      let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
 
       //fenêtre pop-up
-      const PopUp = () => {
+      const popUp = () => {
         if (
           window.confirm(`Votre commande de ${quantityProduct} ${product.name} ${colorProduct} est ajoutée au panier
 Pour consulter votre panier, cliquez sur OK`)
         ) {
-          // window.location.href ="cart.html";
+           window.location.href ="cart.html";
         }
       };
 
@@ -104,28 +111,28 @@ Pour consulter votre panier, cliquez sur OK`)
             parseInt(resultFind.quantityProduct);
           resultFind.quantityProduct = newQuantity;
           localStorage.setItem(
-            "product",
+            "products",
             JSON.stringify(productOnLocalStorage)
           );
           console.table(productOnLocalStorage);
-          PopUp();
+          popUp();
           //Si le produit commandé n'est pas dans le panier
         } else {
           productOnLocalStorage.push(objProducts);
           localStorage.setItem(
-            "product",
+            "products",
             JSON.stringify(productOnLocalStorage)
           );
           console.table(productOnLocalStorage);
-          PopUp();
+          popUp();
         }
         //Si le panier est vide
       } else {
         productOnLocalStorage = [];
         productOnLocalStorage.push(objProducts);
-        localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
+        localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
         console.table(productOnLocalStorage);
-        PopUp();
+        popUp();
       }
     }
   });

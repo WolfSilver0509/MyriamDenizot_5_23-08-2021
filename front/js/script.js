@@ -43,5 +43,5 @@ kanap
     //si requete impossible affichage message d'erreur en place de la liste de produit et message erreur console//
     document.getElementById("items").innertext =
       "Désolé un problème est survenu pendant le chargement de notre catalogue.veuillez réessayer ultérieurement";
-    console.log("Problème API");
+    console.log("Problème API page script.js");
   });

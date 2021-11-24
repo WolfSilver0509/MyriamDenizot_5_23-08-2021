@@ -1,17 +1,17 @@
 //Initialisation du local storage
-let productOnLocalStorage = JSON.parse(localStorage.getItem("product"));
+let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
 //console.table(productOnLocalStorage);
 const textEmptyCart = document.querySelector("#cart__items");
 
-console.log(productOnLocalStorage[0].productName);
+
 
 // Si le panier est vide
 function getCart() {
-  if (localStorage.getItem("product")) {
+  if (localStorage.getItem("products")) {
     if (productOnLocalStorage.length > 0) {
       // console.log(productOnLocalStorage);
 
-      productOnLocalStorage.map((product) => {
+      productOnLocalStorage.forEach((product) => {
         document.getElementById(
           "cart__items"
         ).innerHTML += `   <article class="cart__item" data-id="${product.id}">
@@ -57,15 +57,15 @@ function changeQuantity() {
       let quantityChangedValue = quantityChanged[m].valueAsNumber;
 
       const resultFind = productOnLocalStorage.find(
-        (el) => el.quantityChangedValue !== quantityIsChanged
+        (el) => el.quantityProduct !== quantityIsChanged
       );
 
       resultFind.quantityProduct = quantityChangedValue;
       productOnLocalStorage[m].quantityProduct = resultFind.quantityProduct;
 
-      localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
+      localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
 
-      // refresh rapide
+      // refresh rapide 
       location.reload();
     });
   }
@@ -88,7 +88,7 @@ function deleteProduct() {
         (el) => el.id !== idDelete || el.color !== colorDelete
       );
 
-      localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
+      localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
 
       //Alerte produit supprimé et refresh
       alert("Ce produit est supprimé de votre panier");
