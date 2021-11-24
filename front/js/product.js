@@ -7,16 +7,6 @@ console.log(id);
 const color = document. querySelector("#colors");
 const quantity = document.querySelector("#quantity");
 
-const item = document.getElementById("item");
-console.log(item.innerHTML);
-
-function checkLocalStorage () {
-    if ( localStorage.getItem("products") === null){
-        localStorage.setItem("products", "[]");
-    }
-
-}
-
 getProduct();
 
 // Récupération des products de l'API

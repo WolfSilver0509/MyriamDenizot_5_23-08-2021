@@ -43,7 +43,8 @@ function getCart(){
     }
 
     else{
-
+    const emptyCart = `<p>Votre panier est vide</p>`;
+    textEmptyCart.innerHTML = emptyCart;
     }
   }
 
