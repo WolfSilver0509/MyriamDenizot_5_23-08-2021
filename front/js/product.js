@@ -7,6 +7,16 @@ console.log(id);
 const color = document. querySelector("#colors");
 const quantity = document.querySelector("#quantity");
 
+const item = document.getElementById("item");
+console.log(item.innerHTML);
+
+function checkLocalStorage () {
+    if ( localStorage.getItem("products") === null){
+        localStorage.setItem("products", "[]");
+    }
+
+}
+
 getProduct();
 
 // Récupération des products de l'API
@@ -91,7 +101,7 @@ function addedProductOnCart(product) {
 
         if(window.confirm(`Votre commande de ${quantityProduct} ${product.name} ${colorProduct} est ajoutée au panier
 Pour consulter votre panier, cliquez sur OK`)){
-            window.location.href ="cart.html";
+           // window.location.href ="cart.html";
         }
     }
 
