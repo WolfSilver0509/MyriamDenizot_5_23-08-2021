@@ -53,11 +53,65 @@ function getCart(){
 }
 
 
-const doc = document.querySelectorAll(".itemQuantity");
-// for( let i in doc){
-//   console.log(doc);
-// }
+// const doc = document.querySelectorAll(".itemQuantity");
+// // for( let i in doc){
+// //   console.log(doc);
+// // }
 
-console.log(doc);
+// console.log(doc);
 
   getCart();
+
+  // Changement de la quantité des produits
+function changeQuantity() {
+  let quantityChanged = document.querySelectorAll(".itemQuantity");
+
+  for (let m = 0; m < quantityChanged.length; m++){
+      quantityChanged[m].addEventListener("change" , (event) => {
+          event.preventDefault();
+
+          //Selection de l'element à modifier en fonction de son id ET sa couleur
+          let quantityIsChanged = productOnLocalStorage[m].quantityProduct;
+          let quantityChangedValue = quantityChanged[m].valueAsNumber;
+
+          const resultFind = productOnLocalStorage.find((el) => el.quantityChangedValue !== quantityIsChanged);
+
+          resultFind.quantityProduct = quantityChangedValue;
+          productOnLocalStorage[m].quantityProduct = resultFind.quantityProduct;
+
+          localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
+
+          // refresh rapide
+          location.reload();
+      })
+  }
+}
+changeQuantity();
+
+// Suppression des produits
+function deleteProduct() {
+
+  let btnDelete = document.querySelectorAll(".deleteItem");
+
+  for (let n = 0; n < btnDelete.length; n++){
+      btnDelete[n].addEventListener("click" , (event) => {
+          event.preventDefault();
+
+          //Selection de l'element à supprimer en fonction de son id ET sa couleur
+          let idDelete = productOnLocalStorage[n].id;
+          let colorDelete = productOnLocalStorage[n].color;
+
+          productOnLocalStorage = productOnLocalStorage.filter( el => el.id !== idDelete || el.color !== colorDelete );
+          
+          localStorage.setItem("product", JSON.stringify(productOnLocalStorage));
+
+          //Alerte produit supprimé et refresh
+          alert("Ce produit est supprimé de votre panier");
+
+          location.reload();
+      })
+  }
+}
+deleteProduct();
+
+
