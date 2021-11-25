@@ -45,29 +45,32 @@ function getCart() {
 getCart();
 
 // Changement de la quantité des produits
+
 function changeQuantity() {
-  let quantityChanged = document.querySelectorAll(".itemQuantity");
+  let itemQuantity = document.querySelectorAll(".itemQuantity");
 
-  for (let m = 0; m < quantityChanged.length; m++) {
-    quantityChanged[m].addEventListener("change", (event) => {
-      event.preventDefault();
+  for (let m = 0; m < itemQuantity.length; m++){
+      itemQuantity[m].addEventListener("change" , (event) => {
+          event.preventDefault();
 
-      //Selection de l'element à modifier en fonction de son id ET sa couleur
-      let quantityIsChanged = productOnLocalStorage[m].quantityProduct;
-      let quantityChangedValue = quantityChanged[m].valueAsNumber;
+          //Selection de l'element à modifier en fonction de son id ET sa couleur
+          let quantityModif = productOnLocalStorage[m].quantityProduct;
+          let itemQuantityValue = itemQuantity[m].valueAsNumber;
+          let itemColor = productOnLocalStorage[m].color;
+          let itemColorValue = itemQuantity[m].value;
+          
+          let resultFind = productOnLocalStorage.find((el) => el.itemQuantityValue == quantityModif && el.itemColorValue == itemColor );
 
-      const resultFind = productOnLocalStorage.find(
-        (el) => el.quantityProduct !== quantityIsChanged
-      );
+          resultFind.quantityProduct = itemQuantityValue;
+          resultFind.color = itemColorValue;
+          productOnLocalStorage[m].quantityProduct = resultFind.quantityProduct;
+          productOnLocalStorage[m].color = resultFind.color;
 
-      resultFind.quantityProduct = quantityChangedValue;
-      productOnLocalStorage[m].quantityProduct = resultFind.quantityProduct;
-
-      localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
-
-      // refresh rapide 
-      location.reload();
-    });
+          localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
+      
+          // refresh rapide
+          location.reload();
+      })
   }
 }
 changeQuantity();
@@ -98,3 +101,40 @@ function deleteProduct() {
   }
 }
 deleteProduct();
+
+// Fonction du total du panier 
+function cartTotal() {
+
+  let total = 0;
+  productOnLocalStorage.forEach(product => {
+      total = total + (Number(product.productPrice) * Number(product.quantityProduct))
+  })
+
+
+  const printTotal = document.getElementById("totalPrice");
+  const  printHTMLTotal = `${total}`;
+  printTotal.innerHTML= printHTMLTotal;
+
+  //return total;
+}
+
+cartTotal(); 
+
+
+// Fonction Ajout de quantité 
+
+function cartQuantityTotal(){
+
+  let quantityTotal = 0;
+
+  productOnLocalStorage.forEach(product => {
+    quantityTotal = quantityTotal + (Number (product.quantityProduct++))
+  })
+
+  const printQuantityTotal = document.getElementById("totalQuantity");
+  const printQuantityHTMLTotal =`${quantityTotal}`;
+  printQuantityTotal.innerHTML = printQuantityHTMLTotal;
+
+}
+
+cartQuantityTotal();
