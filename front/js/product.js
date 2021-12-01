@@ -67,6 +67,12 @@ function addProductOnCart(product) {
   //Ecouter le panier avec 2 conditions couleur non nulle et quantité entre 1 et 100
   btnSendToCart.addEventListener("click", () => {
     if (quantity.value > 0 && quantity.value <= 100 && quantity.value != 0) {
+
+    if (color === "") {
+      return alert("Vous n'avez pas sélectionné la couleur du canapé !");
+    } else {
+      product.colors = color;
+    }
       //Recupération du choix de la couleur
       let colorProduct = color.value;
 
@@ -134,6 +140,9 @@ Pour consulter votre panier, cliquez sur OK`)
         console.table(productOnLocalStorage);
         popUp();
       }
+    }
+    else{
+      alert('Veuillez séléctionner une couleur !')
     }
   });
 }

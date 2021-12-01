@@ -53,18 +53,8 @@ function changeQuantity() {
       itemQuantity[m].addEventListener("change" , (event) => {
           event.preventDefault();
 
-          //Selection de l'element à modifier en fonction de son id ET sa couleur
-          let quantityModif = productOnLocalStorage[m].quantityProduct;
-          let itemQuantityValue = itemQuantity[m].valueAsNumber;
-          let itemColor = productOnLocalStorage[m].color;
-          let itemColorValue = itemQuantity[m].value;
-          
-          let resultFind = productOnLocalStorage.find((el) => el.itemQuantityValue == quantityModif && el.itemColorValue == itemColor );
-
-          resultFind.quantityProduct = itemQuantityValue;
-          resultFind.color = itemColorValue;
-          productOnLocalStorage[m].quantityProduct = resultFind.quantityProduct;
-          productOnLocalStorage[m].color = resultFind.color;
+                 productOnLocalStorage[m].quantityProduct = itemQuantity[m].valueAsNumber;
+         
 
           localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
       
@@ -138,3 +128,157 @@ function cartQuantityTotal(){
 }
 
 cartQuantityTotal();
+
+
+// Etapes Contact
+
+/*Nom et Prénom */
+const form = document.getElementsByClassName("cart__order__form")[0];
+
+form.firstName.addEventListener("change", function () {
+  validName(this);
+});
+form.lastName.addEventListener("change", function () {
+  validName(this);
+});
+
+const validName = function (inputName) {
+  let nameRegExp = new RegExp("^[^- ][a-zA-Z '-àâäéèêëïîôöùûü]*[^- ]$", "g");
+  let testName = nameRegExp.test(inputName.value);
+  if (testName) {
+    inputName.nextElementSibling.innerHTML = "Validé";
+    inputName.nextElementSibling.style.color = "green";
+    return true;
+  } else {
+    inputName.nextElementSibling.innerHTML = "Saisissez votre prénom ou votre nom";
+    inputName.nextElementSibling.style.color = "red";
+    return false;
+  }
+};
+
+/*adresse */
+form.address.addEventListener("change", function () {
+  validAddress(this);
+});
+
+const validAddress = function (inputAdress) {
+  let addressRegExp = new RegExp("^[0-9]{1,4} [^- ][a-zA-Z '-àâäéèêëïîôöùûü]*[^- ]$", "g");
+  let testAdress = addressRegExp.test(inputAdress.value);
+  if (testAdress) {
+    inputAdress.nextElementSibling.innerHTML = "Validé";
+    inputAdress.nextElementSibling.style.color = "green";
+    return true;
+  } else {
+    inputAdress.nextElementSibling.innerHTML = "Saisissez votre adresse";
+    inputAdress.nextElementSibling.style.color = "red";
+    return false;
+  }
+};
+
+/*Ville*/
+form.city.addEventListener("change", function () {
+  validCity(this);
+});
+
+const validCity = function (inputCity) {
+  let cityRegExp = new RegExp("^[^- ][a-zA-Z '-àâäéèêëïîôöùûü]*[^- ]$", "g");
+  let testCity = cityRegExp.test(inputCity.value);
+  if (testCity) {
+    inputCity.nextElementSibling.innerHTML = "Validé";
+    inputCity.nextElementSibling.style.color = "green";
+    return true;
+  } else {
+    inputCity.nextElementSibling.innerHTML = "Saisissez votre ville";
+    inputCity.nextElementSibling.style.color = "red";
+    return false;
+  }
+};
+
+/*Email*/
+// form.email.addEventListener("change", function () {
+//   validEmail(this);
+// });
+
+// const validEmail = function (inputEmail) {
+//   let emailRegExp = new RegExp("^[a-z]+[\.\w\-\d]*@{1}[a-z]{1}[\w\-]*\.{1}com$","g");
+//   let testEmail = emailRegExp.test(inputEmail.value);
+//   if (testEmail) {
+//     inputEmail.nextElementSibling.innerHTML = "Validé";
+//     inputEmail.nextElementSibling.style.color = "green";
+//     return true;
+//   } else {
+//     inputEmail.nextElementSibling.innerHTML ="Saisissez votre adresse mail complète";
+//     inputEmail.nextElementSibling.style.color = "red";
+//     return false;
+//   }
+// };
+
+// fonction contact dans le localStorage
+console.log("Ok");
+
+
+
+
+function printForm (){
+
+  
+  const btnOrder = document.getElementById("order");
+
+  let orderStorage = JSON.parse(localStorage.getItem("orderContact"));
+
+  btnOrder.addEventListener('click', (e)=>{
+
+    // Recup des inputs
+
+    let inputName = document.getElementById('firstName');
+    let inputLastName = document.getElementById('lastName');
+    let inputAdress = document.getElementById('address');
+    let inputCity = document.getElementById('city');
+    let inputMail = document.getElementById('email');
+
+    //localStorage.setItem("order",JSON.stringify(orderStorage));
+
+    let contact = {
+      firstName : inputName.value,
+      lastName : inputLastName.value,
+      adress : inputAdress.value,
+      city : inputCity.value,
+      email : inputMail.value,
+    };
+
+    console.log(contact);
+//-----------------------------------
+if (orderStorage) {
+  const resultFind = orderStorage.find(
+    (el) => el.inputName === firstName );
+  
+  if (resultFind) {
+    
+    localStorage.setItem(
+      "order",
+      JSON.stringify(orderStorage)
+    );
+    console.table(orderStorage);
+    
+  } else {
+    orderStorage.push(contact);
+    localStorage.setItem(
+      "orderContact",
+      JSON.stringify(orderStorage)
+    );
+    console.table(orderStorage);
+    
+  }
+  
+} else {
+  orderStorage = [];
+  orderStorage.push(contact);
+  localStorage.setItem("orderContact", JSON.stringify(orderStorage));
+  console.table(orderStorage);
+  }
+});
+}
+//-----------------------------------
+
+
+printForm();
