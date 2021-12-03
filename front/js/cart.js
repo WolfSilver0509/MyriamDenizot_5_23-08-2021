@@ -54,7 +54,8 @@ function changeQuantity() {
           event.preventDefault();
 
                  productOnLocalStorage[m].quantityProduct = itemQuantity[m].valueAsNumber;
-         
+                 
+          console.log(productOnLocalStorage[m].quantityProduct);
 
           localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
       
@@ -195,23 +196,23 @@ const validCity = function (inputCity) {
 };
 
 /*Email*/
-// form.email.addEventListener("change", function () {
-//   validEmail(this);
-// });
+form.email.addEventListener("change", function () {
+  validEmail(this);
+});
 
-// const validEmail = function (inputEmail) {
-//   let emailRegExp = new RegExp("^[a-z]+[\.\w\-\d]*@{1}[a-z]{1}[\w\-]*\.{1}com$","g");
-//   let testEmail = emailRegExp.test(inputEmail.value);
-//   if (testEmail) {
-//     inputEmail.nextElementSibling.innerHTML = "Validé";
-//     inputEmail.nextElementSibling.style.color = "green";
-//     return true;
-//   } else {
-//     inputEmail.nextElementSibling.innerHTML ="Saisissez votre adresse mail complète";
-//     inputEmail.nextElementSibling.style.color = "red";
-//     return false;
-//   }
-// };
+const validEmail = function (inputEmail) {
+  let emailRegExp = new RegExp("^[a-z]+[\\.\\w\\-\\d]*@{1}[a-z]{1}[\\w\\-]*\\.{1}com$","g");
+  let testEmail = emailRegExp.test(inputEmail.value);
+  if (testEmail) {
+    inputEmail.nextElementSibling.innerHTML = "Validé";
+    inputEmail.nextElementSibling.style.color = "green";
+    return true;
+  } else {
+    inputEmail.nextElementSibling.innerHTML ="Saisissez votre adresse mail complète";
+    inputEmail.nextElementSibling.style.color = "red";
+    return false;
+  }
+};
 
 // fonction contact dans le localStorage
 console.log("Ok");
