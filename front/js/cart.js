@@ -26,7 +26,7 @@ function getCart() {
            <div class="cart__item__content__settings">
              <div class="cart__item__content__settings__quantity">
                <p>Qté : ${product.color} </p>
-               <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${product.quantityProduct}>
+               <input  type="number" class="itemQuantity" id="${product.id}" name="itemQuantity" min="1" max="100" value=${product.quantityProduct}>
              </div>
              <div class="cart__item__content__settings__delete">
                <p class="deleteItem">Supprimer</p>
@@ -47,11 +47,14 @@ getCart();
 // Changement de la quantité des produits
 
 function changeQuantity() {
+
   let itemQuantity = document.querySelectorAll(".itemQuantity");
 
   for (let m = 0; m < itemQuantity.length; m++){
       itemQuantity[m].addEventListener("change" , (event) => {
           event.preventDefault();
+
+          console.log(m);
 
                  productOnLocalStorage[m].quantityProduct = itemQuantity[m].valueAsNumber;
                  
@@ -144,7 +147,7 @@ form.lastName.addEventListener("change", function () {
 });
 
 const validName = function (inputName) {
-  let nameRegExp = new RegExp("^[^- ][a-zA-Z '-àâäéèêëïîôöùûü]*[^- ]$", "g");
+  let nameRegExp = new RegExp("^[A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ-]+[A-Za-z]+$", "g");
   let testName = nameRegExp.test(inputName.value);
   if (testName) {
     inputName.nextElementSibling.innerHTML = "Validé";
@@ -162,16 +165,16 @@ form.address.addEventListener("change", function () {
   validAddress(this);
 });
 
-const validAddress = function (inputAdress) {
+const validAddress = function (inputAdrress) {
   let addressRegExp = new RegExp("^[0-9]{1,4} [^- ][a-zA-Z '-àâäéèêëïîôöùûü]*[^- ]$", "g");
-  let testAdress = addressRegExp.test(inputAdress.value);
-  if (testAdress) {
-    inputAdress.nextElementSibling.innerHTML = "Validé";
-    inputAdress.nextElementSibling.style.color = "green";
+  let testAddress = addressRegExp.test(inputAddress.value);
+  if (testAddress) {
+    inputAddress.nextElementSibling.innerHTML = "Validé";
+    inputAddress.nextElementSibling.style.color = "green";
     return true;
   } else {
-    inputAdress.nextElementSibling.innerHTML = "Saisissez votre adresse";
-    inputAdress.nextElementSibling.style.color = "red";
+    inputAddress.nextElementSibling.innerHTML = "Saisissez votre adresse";
+    inputAddress.nextElementSibling.style.color = "red";
     return false;
   }
 };
@@ -182,7 +185,7 @@ form.city.addEventListener("change", function () {
 });
 
 const validCity = function (inputCity) {
-  let cityRegExp = new RegExp("^[^- ][a-zA-Z '-àâäéèêëïîôöùûü]*[^- ]$", "g");
+  let cityRegExp = new RegExp("^[a-zA-Z',.\s-]{1,25}$", "g");
   let testCity = cityRegExp.test(inputCity.value);
   if (testCity) {
     inputCity.nextElementSibling.innerHTML = "Validé";
@@ -201,7 +204,7 @@ form.email.addEventListener("change", function () {
 });
 
 const validEmail = function (inputEmail) {
-  let emailRegExp = new RegExp("^[a-z]+[\\.\\w\\-\\d]*@{1}[a-z]{1}[\\w\\-]*\\.{1}com$","g");
+  let emailRegExp = new RegExp("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\w+)*(\\.\\w{2,3})+$","g");
   let testEmail = emailRegExp.test(inputEmail.value);
   if (testEmail) {
     inputEmail.nextElementSibling.innerHTML = "Validé";
@@ -217,15 +220,10 @@ const validEmail = function (inputEmail) {
 // fonction contact dans le localStorage
 console.log("Ok");
 
-
-
-
 function printForm (){
 
   
   const btnOrder = document.getElementById("order");
-
-  let orderStorage = JSON.parse(localStorage.getItem("orderContact"));
 
   btnOrder.addEventListener('click', (e)=>{
 
@@ -233,53 +231,50 @@ function printForm (){
 
     let inputName = document.getElementById('firstName');
     let inputLastName = document.getElementById('lastName');
-    let inputAdress = document.getElementById('address');
+    let inputAddress = document.getElementById('address');
     let inputCity = document.getElementById('city');
     let inputMail = document.getElementById('email');
 
-    //localStorage.setItem("order",JSON.stringify(orderStorage));
-
-    let contact = {
-      firstName : inputName.value,
-      lastName : inputLastName.value,
-      adress : inputAdress.value,
-      city : inputCity.value,
-      email : inputMail.value,
-    };
-
-    console.log(contact);
-//-----------------------------------
-if (orderStorage) {
-  const resultFind = orderStorage.find(
-    (el) => el.inputName === firstName );
-  
-  if (resultFind) {
-    
-    localStorage.setItem(
-      "order",
-      JSON.stringify(orderStorage)
-    );
-    console.table(orderStorage);
-    
-  } else {
-    orderStorage.push(contact);
-    localStorage.setItem(
-      "orderContact",
-      JSON.stringify(orderStorage)
-    );
-    console.table(orderStorage);
-    
+  //Construction d'un array depuis le local storage
+  let idProducts = [];
+  for (let i = 0; i<productOnLocalStorage.length;i++) {
+      idProducts.push(productOnLocalStorage[i].id);
   }
-  
-} else {
-  orderStorage = [];
-  orderStorage.push(contact);
-  localStorage.setItem("orderContact", JSON.stringify(orderStorage));
-  console.table(orderStorage);
-  }
+  console.log(idProducts);
+
+  const order = {
+      contact : {
+          firstName: inputName.value,
+          lastName: inputLastName.value,
+          address: inputAddress.value,
+          city: inputCity.value,
+          email: inputMail.value,
+      },
+      products: idProducts,
+  } 
+
+  const options = {
+      method: 'POST',
+      body: JSON.stringify(order),
+      headers: {
+          'Accept': 'application/json', 
+          "Content-Type": "application/json" 
+      },
+  };
+
+  fetch("http://localhost:3000/api/products/order", options)
+  .then((response) => response.json())
+  .then((data) => {
+      console.log(data);
+      //localStorage.clear();
+      localStorage.setItem("orderId", data.orderId);
+
+      document.location.href = "confirmation.html";
+  })
+  .catch((err) => {
+      alert ("Problème avec fetch : " + err.message);
+  });       
 });
 }
-//-----------------------------------
-
 
 printForm();
