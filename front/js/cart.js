@@ -214,6 +214,7 @@ function printForm (){
   const btnOrder = document.getElementById("order");
 
   btnOrder.addEventListener('click', (e)=>{
+    e.preventDefault()
 
     // Recup des inputs
 
