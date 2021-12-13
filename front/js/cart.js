@@ -3,6 +3,8 @@ let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
 //console.table(productOnLocalStorage);
 const textEmptyCart = document.querySelector("#cart__items");
 
+
+
 // Si le panier est vide
 function getCart() {
   if (localStorage.getItem("products")) {
@@ -45,23 +47,24 @@ getCart();
 // Changement de la quantité des produits
 
 function changeQuantity() {
+
   let itemQuantity = document.querySelectorAll(".itemQuantity");
 
-  for (let m = 0; m < itemQuantity.length; m++) {
-    itemQuantity[m].addEventListener("change", (event) => {
-      event.preventDefault();
+  for (let m = 0; m < itemQuantity.length; m++){
+      itemQuantity[m].addEventListener("change" , (event) => {
+          event.preventDefault();
 
-      console.log(m);
+          console.log(m);
 
-      productOnLocalStorage[m].quantityProduct = itemQuantity[m].valueAsNumber;
+                 productOnLocalStorage[m].quantityProduct = itemQuantity[m].valueAsNumber;
+                 
+          console.log(productOnLocalStorage[m].quantityProduct);
 
-      console.log(productOnLocalStorage[m].quantityProduct);
-
-      localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
-
-      // refresh rapide
-      location.reload();
-    });
+          localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
+      
+          // refresh rapide
+          location.reload();
+      })
   }
 }
 changeQuantity();
@@ -93,40 +96,44 @@ function deleteProduct() {
 }
 deleteProduct();
 
-// Fonction du total du panier
+// Fonction du total du panier 
 function cartTotal() {
+
   let total = 0;
-  productOnLocalStorage.forEach((product) => {
-    total =
-      total + Number(product.productPrice) * Number(product.quantityProduct);
-  });
+  productOnLocalStorage.forEach(product => {
+      total = total + (Number(product.productPrice) * Number(product.quantityProduct))
+  })
+
 
   const printTotal = document.getElementById("totalPrice");
-  const printHTMLTotal = `${total}`;
-  printTotal.innerHTML = printHTMLTotal;
+  const  printHTMLTotal = `${total}`;
+  printTotal.innerHTML= printHTMLTotal;
 
   //return total;
 }
 
-cartTotal();
+cartTotal(); 
 
-// Fonction Ajout de quantité
 
-function cartQuantityTotal() {
+// Fonction Ajout de quantité 
+
+function cartQuantityTotal(){
+
   let quantityTotal = 0;
 
-  productOnLocalStorage.forEach((product) => {
-    quantityTotal = quantityTotal + Number(product.quantityProduct++);
-  });
+  productOnLocalStorage.forEach(product => {
+    quantityTotal = quantityTotal + (Number (product.quantityProduct++))
+  })
 
   const printQuantityTotal = document.getElementById("totalQuantity");
-  const printQuantityHTMLTotal = `${quantityTotal}`;
+  const printQuantityHTMLTotal =`${quantityTotal}`;
   printQuantityTotal.innerHTML = printQuantityHTMLTotal;
+
 }
 
 cartQuantityTotal();
 
-// Contact
+// Contact Fonction et ecoute change Regex
 
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
@@ -137,7 +144,8 @@ const email = document.getElementById("email");
 // funtion et change Prenom
 function validFirstNameRegex(firstName) {
   let nameRegExp = new RegExp("^[À-ÿA-z]+$|^[À-ÿA-z]+-[À-ÿA-z]+$", "g");
-  validRegex(firstName, "prénom", nameRegExp);
+  console.log("ok log log");
+   return validRegex(firstName, "prénom", nameRegExp);
 }
 
 firstName.addEventListener("change", (e) => {
@@ -148,7 +156,7 @@ firstName.addEventListener("change", (e) => {
 //Fonction et change Nom
 function validLastNameRegex(lastName) {
   let nameRegExp = new RegExp("^[À-ÿA-z]+$|^[À-ÿA-z]+-[À-ÿA-z]+$", "g");
-  validRegex(lastName, "nom", nameRegExp);
+  return validRegex(lastName, "nom", nameRegExp);
 }
 
 lastName.addEventListener("change", (e) => {
@@ -158,7 +166,7 @@ lastName.addEventListener("change", (e) => {
 //Fonction et change Adresse
 function validAddressRegex(address) {
   let nameRegExp = new RegExp("^[0-9]{1,4} [^- ][a-zA-Z '-àâäéèêëïîôöùûü]*[^- ]$", "g");
-  validRegex(address, "adresse", nameRegExp);
+  return validRegex(address, "adresse", nameRegExp);
 }
 
 address.addEventListener("change", (e) => {
@@ -168,7 +176,7 @@ address.addEventListener("change", (e) => {
 //Fonction et change City
 function validCityRegex(city) {
   let nameRegExp = new RegExp("^[a-zA-Z',.\s-]{1,25}$", "g");
-  validRegex(city, "ville", nameRegExp);
+  return validRegex(city, "ville", nameRegExp);
 }
 
 city.addEventListener("change", (e) => {
@@ -178,7 +186,7 @@ city.addEventListener("change", (e) => {
 //Fonction et change Email
 function validEmailRegex(email) {
   let nameRegExp = new RegExp("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\w+)*(\\.\\w{2,3})+$", "g");
-  validRegex(email, "email", nameRegExp);
+  return validRegex(email, "email", nameRegExp);
 }
 
 email.addEventListener("change", (e) => {
@@ -200,71 +208,75 @@ function validRegex(inputName, nameType, nameRegExp) {
 }
 
 
-console.log("Ok");
+function printForm (){
 
-//function printForm() {
-
+  
   const btnOrder = document.getElementById("order");
 
-  btnOrder.addEventListener("click", (e) => {
+  btnOrder.addEventListener('click', (e)=>{
 
     // Recup des inputs
-    let inputName = document.getElementById("firstName");
-    let inputLastName = document.getElementById("lastName");
-    let inputAddress = document.getElementById("address");
-    let inputCity = document.getElementById("city");
-    let inputMail = document.getElementById("email");
+
+    let inputName = document.getElementById('firstName');
+    let inputLastName = document.getElementById('lastName');
+    let inputAddress = document.getElementById('address');
+    let inputCity = document.getElementById('city');
+    let inputMail = document.getElementById('email');
 
     let canOrder = validFirstNameRegex(inputName) && validLastNameRegex(inputLastName) && validAddressRegex(inputAddress) && validCityRegex(inputCity) && validEmailRegex(inputMail) ;
+    
+    console.log(canOrder);
 
-    if (canOrder){
-//Construction d'un array depuis le local storage
-let idProducts = [];
-for (let i = 0; i < productOnLocalStorage.length; i++) {
-  idProducts.push(productOnLocalStorage[i].id);
-}
-console.log(idProducts);
+     if(canOrder){
+        console.log("ok order");
+  //Construction d'un array depuis le local storage
+  let idProducts = [];
+  for (let i = 0; i<productOnLocalStorage.length;i++) {
+      idProducts.push(productOnLocalStorage[i].id);
+  }
+  console.log(idProducts);
 
-const order = {
-  contact: {
-    firstName: inputName.value,
-    lastName: inputLastName.value,
-    address: inputAddress.value,
-    city: inputCity.value,
-    email: inputMail.value,
-  },
-  products: idProducts,
-};
+  const order = {
+      contact : {
+          firstName: inputName.value,
+          lastName: inputLastName.value,
+          address: inputAddress.value,
+          city: inputCity.value,
+          email: inputMail.value,
+      },
+      products: idProducts,
+  } 
 
-const options = {
-  method: "POST",
-  body: JSON.stringify(order),
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-};
+  const options = {
+      method: 'POST',
+      body: JSON.stringify(order),
+      headers: {
+          'Accept': 'application/json', 
+          "Content-Type": "application/json" 
+      },
+  };
 
-fetch("http://localhost:3000/api/products/order", options)
+  fetch("http://localhost:3000/api/products/order", options)
   .then((response) => response.json())
   .then((data) => {
-    console.log(data);
-    //localStorage.clear();
-    localStorage.setItem("orderId", data.orderId);
+      console.log(data);
+      //localStorage.clear();
+      localStorage.setItem("orderId", data.orderId);
 
-    //document.location.href = "confirmation.html";
+      document.location.href = "confirmation.html";
   })
   .catch((err) => {
-    alert("Problème avec fetch : " + err.message);
+      alert ("Problème avec fetch : " + err.message);
   });
-    }
-    else {
-      //alert("Vous n'avez pas remplis tous les champs ! Veuillez vérifier à nouveau.")
-      console.log("Not OKAY");
-    }
 
-    
-  });
-//}
+}
 
-//printForm();
+else{
+    console.log("PAs BOn");
+    alert("Veuillez saisir correctement tout les champs !")
+}
+
+});
+}
+
+printForm();
