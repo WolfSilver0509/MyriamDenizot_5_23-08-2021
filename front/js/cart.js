@@ -264,7 +264,7 @@ function printForm (){
       //localStorage.clear();
       localStorage.setItem("orderId", data.orderId);
 
-      document.location.href = "confirmation.html";
+      document.location.href = `confirmation.html?orderId=${data.orderId}`;
   })
   .catch((err) => {
       alert ("Problème avec fetch : " + err.message);
@@ -273,7 +273,7 @@ function printForm (){
 }
 
 else{
-    console.log("PAs BOn");
+    
     alert("Veuillez saisir correctement tout les champs !")
 }
 
