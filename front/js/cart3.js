@@ -58,8 +58,8 @@ function changeQuantity() {
 
       item.addEventListener('change', e => {
           e.preventDefault();
-          console.log("new" + newQuantity);
           newQuantity= Number(item.value);
+          console.log("new" + newQuantity);
 
           productOnLocalStorage.forEach( product => {
             if (product.id === id  && product.color === color){ 
