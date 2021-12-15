@@ -111,7 +111,7 @@ function deleteProduct() {
 deleteProduct();
 
 // Fonction du total du panier 
-function cartTotal() {
+function cartPriceTotal() {
 
   let total = 0;
   productOnLocalStorage.forEach(product => {
@@ -126,7 +126,7 @@ function cartTotal() {
   //return total;
 }
 
-cartTotal(); 
+cartPriceTotal(); 
 
 
 // Fonction Ajout de quantité 
