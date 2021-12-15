@@ -14,7 +14,7 @@ function getCart() {
       productOnLocalStorage.forEach((product) => {
         document.getElementById(
           "cart__items"
-        ).innerHTML += `   <article class="cart__item" data-id="${product.id}">
+        ).innerHTML += `   <article class="cart__item" data-id="${product.id}" data-color="${product.color}">
          <div class="cart__item__img">
            <img src="${product.productImg}" alt=${product.productAltImg}>
          </div>
@@ -26,7 +26,7 @@ function getCart() {
            <div class="cart__item__content__settings">
              <div class="cart__item__content__settings__quantity">
                <p>Qté : ${product.color} </p>
-               <input  type="number" class="itemQuantity" id="${product.id}" name="itemQuantity" min="1" max="100" value=${product.quantityProduct}>
+               <input  type="number" class="itemQuantity" id="${product.id}" name="itemQuantity" min="1" max="100"  value=${product.quantityProduct}>
              </div>
              <div class="cart__item__content__settings__delete">
                <p class="deleteItem">Supprimer</p>
@@ -42,6 +42,7 @@ function getCart() {
   }
 }
 
+
 getCart();
 
 // Changement de la quantité des produits
@@ -49,22 +50,33 @@ getCart();
 function changeQuantity() {
 
   let itemQuantity = document.querySelectorAll(".itemQuantity");
+  //let itemQuantity = document.querySelectorAll(".cart__item__content__settings");
   
   itemQuantity.forEach( item => {
       const itemCloset = item.closest("article");
       let newQuantity = "";
       const id = itemCloset.dataset.id;
-      const color = itemCloset.dataset.color;
+      const colorItem = itemCloset.dataset.color;
+
+      console.log(id);
+      console.log(colorItem);
 
       item.addEventListener('change', e => {
           e.preventDefault();
           newQuantity= Number(item.value);
           console.log("new" + newQuantity);
 
-          productOnLocalStorage.forEach( product => {
-            if (product.id === id  && product.color === color){ 
-                product.quantityProduct = newQuantity}
+         productOnLocalStorage.forEach( product => {
+            if (product.id === id  && product.color === colorItem){ 
+                
+              console.log("ok if");
+               
+              product.quantityProduct = newQuantity
+              
+            }
           })
+
+          localStorage.setItem("products", JSON.stringify(productOnLocalStorage)); 
       })
   })
 }
