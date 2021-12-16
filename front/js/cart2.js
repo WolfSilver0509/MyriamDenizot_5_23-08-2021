@@ -3,21 +3,14 @@ let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
 //console.table(productOnLocalStorage);
 const textEmptyCart = document.querySelector("#cart__items");
 
-function main(){
-  printCart();
-  changeQuantity();
-  deleteProduct();
-  cartPriceTotal(); 
-  cartQuantityTotal();
-}  
-
 
 
 // Si le panier est vide
-function printCart() {
+function getCart() {
   if (localStorage.getItem("products")) {
     if (productOnLocalStorage.length > 0) {
-      
+      // console.log(productOnLocalStorage);
+
       productOnLocalStorage.forEach((product) => {
         document.getElementById(
           "cart__items"
@@ -49,6 +42,8 @@ function printCart() {
   }
 }
 
+
+getCart();
 
 // Changement de la quantité des produits
 
@@ -82,13 +77,11 @@ function changeQuantity() {
           })
 
           localStorage.setItem("products", JSON.stringify(productOnLocalStorage)); 
-          cartQuantityTotal();
-          cartPriceTotal();
-        })
+      })
   })
 }
 
-
+changeQuantity();
 
 // Suppression des produits
 function deleteProduct() {
@@ -115,7 +108,7 @@ function deleteProduct() {
     });
   }
 }
-
+deleteProduct();
 
 // Fonction du total du panier 
 function cartPriceTotal() {
@@ -133,6 +126,8 @@ function cartPriceTotal() {
   //return total;
 }
 
+cartPriceTotal(); 
+
 
 // Fonction Ajout de quantité 
 
@@ -141,7 +136,7 @@ function cartQuantityTotal(){
   let quantityTotal = 0;
 
   productOnLocalStorage.forEach(product => {
-    quantityTotal = quantityTotal + (Number (product.quantityProduct))
+    quantityTotal = quantityTotal + (Number (product.quantityProduct++))
   })
 
   const printQuantityTotal = document.getElementById("totalQuantity");
@@ -150,8 +145,8 @@ function cartQuantityTotal(){
 
 }
 
-main();
-//-------------------------------------Formulaire---------------------------------------
+cartQuantityTotal();
+
 // Contact Fonction et ecoute change Regex
 
 const firstName = document.getElementById("firstName");
