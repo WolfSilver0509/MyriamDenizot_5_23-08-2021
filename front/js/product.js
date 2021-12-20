@@ -129,7 +129,6 @@ function addProductAlreadyExistOnCart (productOnLocalStorage,objProducts){
       "products",
       JSON.stringify(productOnLocalStorage)
     );
-    console.table(productOnLocalStorage);
     popUp();
   }
 
