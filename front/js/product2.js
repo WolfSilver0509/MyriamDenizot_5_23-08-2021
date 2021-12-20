@@ -57,17 +57,30 @@ function printProductCard() {
 }
 
 
+ //fonction fenêtre pop-up
+function popUp () {
+    if (
+      window.confirm(`Votre commande de ${quantity.value} ${product.name} ${color.value} est ajoutée au panier
+Pour consulter votre panier, cliquez sur OK`)
+    ) {
+       window.location.href ="cart.html";
+    }
+  };
 
-// Bouton Ajouter les produits au Paniers et mettre à jour le local storage en meme temps
-
+//Fonction ajouter au panier
+function addProductOnCart(product) {
   const btnSendToCart = document.getElementById("addToCart");
 
-  //Ecouter le bouton au click et ajouter les produit au paniers si les conditions sont respecter
+  //Ecouter le panier avec 2 conditions couleur non nulle et quantité entre 1 et 100
   btnSendToCart.addEventListener("click", () => {
     
-    // 2 Condition conditions couleur non nulle et quantité entre 1 et 100
     if (quantity.value > 0 && quantity.value <= 100 && quantity.value != 0 && color.value !=0) {
 
+    // if (color === "") {
+    //   return alert("Vous n'avez pas sélectionné la couleur du canapé !");
+    // } else {
+    //   product.colors = color;
+    // }
       //Recupération du choix de la couleur
       let colorProduct = color.value;
 
@@ -89,66 +102,43 @@ function printProductCard() {
       //Initialisation du local storage
       let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
 
-      //Condition si le produit existe déja dans la panier
+      //Importation dans le local storage
+      //Si le panier comporte déjà au moins 1 product
       if (productOnLocalStorage) {
-
-        addProductAlreadyExistOnCart(productOnLocalStorage,objProducts);
-
-      }
-      // Sinon si c'est un nouveau produit à ajouter au panier
-       else {
-        addNewProductOnCart(productOnLocalStorage,objProducts);
+        const resultFind = productOnLocalStorage.find(
+          (el) => el.id === id && el.color === colorProduct
+        );
+        //Si le product commandé est déjà dans le panier
+        if (resultFind) {
+          let newQuantity =
+            parseInt(objProducts.quantityProduct) +
+            parseInt(resultFind.quantityProduct);
+          resultFind.quantityProduct = newQuantity;
+          localStorage.setItem(
+            "products",
+            JSON.stringify(productOnLocalStorage)
+          );
+          popUp();
+          //Si le produit commandé n'est pas dans le panier
+        } else {
+          productOnLocalStorage.push(objProducts);
+          localStorage.setItem(
+            "products",
+            JSON.stringify(productOnLocalStorage)
+          );
+          console.table(productOnLocalStorage);
+          popUp();
+        }
+        //Si le panier est vide
+      } else {
+        productOnLocalStorage = [];
+        productOnLocalStorage.push(objProducts);
+        localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
+        popUp();
       }
     }
-    //Alerte si condition non respécter
     else{
       alert('Veuillez séléctionner une couleur ou une quantitée ! ')
     }
   });
-
-
-// Function si le produit existe déja dans la panier
-function addProductAlreadyExistOnCart (productOnLocalStorage,objProducts){
-  const resultFind = productOnLocalStorage.find(
-    (el) => el.id === id && el.color === colorProduct
-  );
-  if (resultFind) {
-    let newQuantity =
-      parseInt(objProducts.quantityProduct) +
-      parseInt(resultFind.quantityProduct);
-    resultFind.quantityProduct = newQuantity;
-    localStorage.setItem(
-      "products",
-      JSON.stringify(productOnLocalStorage)
-    );
-    popUp();
-    
-  } else {
-    productOnLocalStorage.push(objProducts);
-    localStorage.setItem(
-      "products",
-      JSON.stringify(productOnLocalStorage)
-    );
-    console.table(productOnLocalStorage);
-    popUp();
-  }
-
 }
-
-//Fonction Ajouter un nouveau produit dans le panier
-function addNewProductOnCart(productOnLocalStorage,objProducts){
-  productOnLocalStorage = [];
-  productOnLocalStorage.push(objProducts);
-  localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
-  popUp();
-}
-
- //fonction fenêtre pop-up de validation avec recap quantité et couleur
- function popUp () {
-  if (
-    window.confirm(`Votre commande de ${quantity.value} ${product.name} ${color.value} est ajoutée au panier
-Pour consulter votre panier, cliquez sur OK`)
-  ) {
-     window.location.href ="cart.html";
-  }
-};

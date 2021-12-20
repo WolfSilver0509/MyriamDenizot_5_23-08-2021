@@ -1,11 +1,11 @@
 //fonction affichage dynamique accueil//
 
 //requete API -> promesse//
-const kanap = fetch("http://localhost:3000/api/products");
-kanap
+const product = fetch("http://localhost:3000/api/products");
+product
   .then((response) => {
     //si ok promesse devient reponse//
-    var kanapprom = response.json();
+    let kanapprom = response.json();
     kanapprom.then((kanaptabs) => {
       // reponse = tableau à boucler par index=k//
       for (let k = 0; k < kanaptabs.length; k++) {

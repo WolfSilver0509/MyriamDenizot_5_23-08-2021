@@ -63,18 +63,16 @@ function changeQuantity() {
       const id = itemCloset.dataset.id;
       const colorItem = itemCloset.dataset.color;
 
-      console.log(id);
-      console.log(colorItem);
 
       item.addEventListener('change', e => {
           e.preventDefault();
           newQuantity= Number(item.value);
-          console.log("new" + newQuantity);
+        
 
          productOnLocalStorage.forEach( product => {
             if (product.id === id  && product.color === colorItem){ 
                 
-              console.log("ok if");
+              
                
               product.quantityProduct = newQuantity
               
@@ -163,7 +161,7 @@ const email = document.getElementById("email");
 // funtion et change Prenom
 function validFirstNameRegex(firstName) {
   let nameRegExp = new RegExp("^[À-ÿA-z]+$|^[À-ÿA-z]+-[À-ÿA-z]+$", "g");
-  console.log("ok log log");
+  
    return validRegex(firstName, "prénom", nameRegExp);
 }
 
@@ -227,7 +225,7 @@ function validRegex(inputName, nameType, nameRegExp) {
 }
 
 
-function printForm (){
+function validAndSubmitForm (){
 
   
   const btnOrder = document.getElementById("order");
@@ -245,16 +243,16 @@ function printForm (){
 
     let canOrder = validFirstNameRegex(inputName) && validLastNameRegex(inputLastName) && validAddressRegex(inputAddress) && validCityRegex(inputCity) && validEmailRegex(inputMail) ;
     
-    console.log(canOrder);
+   
 
      if(canOrder){
-        console.log("ok order");
+        
   //Construction d'un array depuis le local storage
   let idProducts = [];
   for (let i = 0; i<productOnLocalStorage.length;i++) {
       idProducts.push(productOnLocalStorage[i].id);
   }
-  console.log(idProducts);
+  
 
   const order = {
       contact : {
@@ -279,7 +277,7 @@ function printForm (){
   fetch("http://localhost:3000/api/products/order", options)
   .then((response) => response.json())
   .then((data) => {
-      console.log(data);
+      
       //localStorage.clear();
       localStorage.setItem("orderId", data.orderId);
 
@@ -299,4 +297,4 @@ else{
 });
 }
 
-printForm();
+validAndSubmitForm();
