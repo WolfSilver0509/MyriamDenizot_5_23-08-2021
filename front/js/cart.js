@@ -3,17 +3,18 @@ let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
 //console.table(productOnLocalStorage);
 const textEmptyCart = document.querySelector("#cart__items");
 
+//Fonction principal recap de tout les fonctions Produits
 function main(){
   printCart();
   changeQuantity();
   deleteProduct();
-  cartPriceTotal(); 
-  cartQuantityTotal();
+  printCartPriceTotal(); 
+  printCartQuantityTotal();
 }  
 
 
 
-// Si le panier est vide
+//Fonction Afficher les produits dans le panier avec condition
 function printCart() {
   if (localStorage.getItem("products")) {
     if (productOnLocalStorage.length > 0) {
@@ -50,7 +51,7 @@ function printCart() {
 }
 
 
-// Changement de la quantité des produits
+// Fonction du Changement de la quantité des produits
 
 function changeQuantity() {
 
@@ -80,15 +81,15 @@ function changeQuantity() {
           })
 
           localStorage.setItem("products", JSON.stringify(productOnLocalStorage)); 
-          cartQuantityTotal();
-          cartPriceTotal();
+          printCartQuantityTotal();
+          printCartPriceTotal();
         })
   })
 }
 
 
 
-// Suppression des produits
+// Fonction de Suppression des produits
 function deleteProduct() {
   let btnDelete = document.querySelectorAll(".deleteItem");
 
@@ -115,26 +116,23 @@ function deleteProduct() {
 }
 
 
-// Fonction du total du panier 
-function cartPriceTotal() {
+// Fonction d'affichage du prix total du panier 
+function printCartPriceTotal() {
 
   let total = 0;
   productOnLocalStorage.forEach(product => {
       total = total + (Number(product.productPrice) * Number(product.quantityProduct))
   })
 
-
   const printTotal = document.getElementById("totalPrice");
   const  printHTMLTotal = `${total}`;
   printTotal.innerHTML= printHTMLTotal;
 
-  //return total;
 }
 
 
-// Fonction Ajout de quantité 
-
-function cartQuantityTotal(){
+// Fonction d'affichage de la quantité du totals du Panier  
+function printCartQuantityTotal(){
 
   let quantityTotal = 0;
 
@@ -150,8 +148,8 @@ function cartQuantityTotal(){
 
 main();
 //-------------------------------------Formulaire---------------------------------------
-// Contact Fonction et ecoute change Regex
 
+// Contact Fonction et ecoute change Regex
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
 const address = document.getElementById("address");
@@ -210,6 +208,7 @@ email.addEventListener("change", (e) => {
   e.preventDefault();
   validEmailRegex(email);
 });
+
 //Fonction ValideRegex stylisation unique.
 function validRegex(inputName, nameType, nameRegExp) {
   let testName = nameRegExp.test(inputName.value);
@@ -224,27 +223,16 @@ function validRegex(inputName, nameType, nameRegExp) {
   }
 }
 
-
+//Fonction de validation en Regex et Envoie du formulaire en méthode POST 
 function validAndSubmitForm (){
 
-  
   const btnOrder = document.getElementById("order");
 
   btnOrder.addEventListener('click', (e)=>{
     e.preventDefault()
 
-    // Recup des inputs
-
-    let inputName = document.getElementById('firstName');
-    let inputLastName = document.getElementById('lastName');
-    let inputAddress = document.getElementById('address');
-    let inputCity = document.getElementById('city');
-    let inputMail = document.getElementById('email');
-
-    let canOrder = validFirstNameRegex(inputName) && validLastNameRegex(inputLastName) && validAddressRegex(inputAddress) && validCityRegex(inputCity) && validEmailRegex(inputMail) ;
+    let canOrder = validFirstNameRegex(firstName) && validLastNameRegex(lastName) && validAddressRegex(address) && validCityRegex(city) && validEmailRegex(email) ;
     
-   
-
      if(canOrder){
         
   //Construction d'un array depuis le local storage
@@ -256,11 +244,11 @@ function validAndSubmitForm (){
 
   const order = {
       contact : {
-          firstName: inputName.value,
-          lastName: inputLastName.value,
-          address: inputAddress.value,
-          city: inputCity.value,
-          email: inputMail.value,
+          firstName: firstName.value,
+          lastName: lastName.value,
+          address: address.value,
+          city: city.value,
+          email: email.value,
       },
       products: idProducts,
   } 
@@ -278,7 +266,7 @@ function validAndSubmitForm (){
   .then((response) => response.json())
   .then((data) => {
       
-      //localStorage.clear();
+      localStorage.clear();
       localStorage.setItem("orderId", data.orderId);
 
       document.location.href = `confirmation.html?orderId=${data.orderId}`;

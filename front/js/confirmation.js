@@ -1,4 +1,5 @@
-
+//Fonction affichage du numéro de commande et numéro de commande mis dans l'url de la page .
+//Aucun stockage n'est éffectuer comme demander.
  function printId(){
 
 //récupération du span orderId

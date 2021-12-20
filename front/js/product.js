@@ -5,10 +5,10 @@ let id = url.searchParams.get("id");
 const color = document.querySelector("#colors");
 const quantity = document.querySelector("#quantity");
 
-getProduct();
+getAndPrintProduct();
 
-// Récupération des products de l'API
-function getProduct() {
+// Récupération des products de l'API Recuperer et afficher les donnée de l'API
+function getAndPrintProduct() {
   fetch("http://localhost:3000/api/products/" + id)
     .then((data) => {
       return data.json();
@@ -29,7 +29,7 @@ function getProduct() {
         console.log("Problème API page product.js");
       });
 }
-
+//Fonction Afficher les produits dans le DOM
 function printProductCard() {
   let productImg = document.createElement("img");
   document.querySelector(".item__img").appendChild(productImg);
@@ -53,13 +53,13 @@ function printProductCard() {
     productColors.innerHTML = colors;
   }
 
-  addProductOnCart(product);
+  buttonAddProductOnCart(product);
 }
 
 
 
-// Bouton Ajouter les produits au Paniers et mettre à jour le local storage en meme temps
-
+// Fonction bouton Ajouter les produits au Paniers et mettre à jour le local storage en meme temps
+function buttonAddProductOnCart(){
   const btnSendToCart = document.getElementById("addToCart");
 
   //Ecouter le bouton au click et ajouter les produit au paniers si les conditions sont respecter
@@ -105,12 +105,13 @@ function printProductCard() {
       alert('Veuillez séléctionner une couleur ou une quantitée ! ')
     }
   });
+}
 
 
 // Function si le produit existe déja dans la panier
 function addProductAlreadyExistOnCart (productOnLocalStorage,objProducts){
   const resultFind = productOnLocalStorage.find(
-    (el) => el.id === id && el.color === colorProduct
+    (el) => el.id === id && el.color === color.value
   );
   if (resultFind) {
     let newQuantity =
