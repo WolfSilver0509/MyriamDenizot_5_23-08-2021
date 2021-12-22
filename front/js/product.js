@@ -23,10 +23,10 @@ function getAndPrintProduct() {
     })
 
     .catch((err) => {
-        //si requete impossible affichage message d'erreur en place de la liste de produit et message erreur console//
+        
         document.getElementById("item").innertext =
           "Désolé un problème est survenu pendant le chargement de votre produit .veuillez réessayer ultérieurement";
-        console.log("Problème API page product.js");
+        
       });
 }
 //Fonction Afficher les produits dans le DOM
@@ -86,18 +86,18 @@ function buttonAddProductOnCart(){
         productAltImg: product.altTxt,
       };
 
-      //Initialisation du local storage
+      //Récuperer dans le localStorage 
       let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
 
-      //Condition si le produit existe déja dans la panier
+      //Si on quelques choses dans le panier
       if (productOnLocalStorage) {
 
-        addProductAlreadyExistOnCart(productOnLocalStorage,objProducts);
+        addProductOnExistingCart(productOnLocalStorage,objProducts);
 
       }
-      // Sinon si c'est un nouveau produit à ajouter au panier
+      //Si le panier est vide
        else {
-        addNewProductOnCart(productOnLocalStorage,objProducts);
+        initializeCartAndAddProduct(productOnLocalStorage,objProducts);
       }
     }
     //Alerte si condition non respécter
@@ -109,7 +109,7 @@ function buttonAddProductOnCart(){
 
 
 // Function si le produit existe déja dans la panier
-function addProductAlreadyExistOnCart (productOnLocalStorage,objProducts){
+function addProductOnExistingCart (productOnLocalStorage,objProducts){
   const resultFind = productOnLocalStorage.find(
     (el) => el.id === id && el.color === color.value
   );
@@ -136,7 +136,7 @@ function addProductAlreadyExistOnCart (productOnLocalStorage,objProducts){
 }
 
 //Fonction Ajouter un nouveau produit dans le panier
-function addNewProductOnCart(productOnLocalStorage,objProducts){
+function initializeCartAndAddProduct(productOnLocalStorage,objProducts){
   productOnLocalStorage = [];
   productOnLocalStorage.push(objProducts);
   localStorage.setItem("products", JSON.stringify(productOnLocalStorage));

@@ -1,20 +1,20 @@
 //fonction affichage dynamique accueil//
 
-//requete API -> promesse//
-const product = fetch("http://localhost:3000/api/products");
+
+let product = fetch("http://localhost:3000/api/products");
 product
   .then((response) => {
-    //si ok promesse devient reponse//
+   
     let kanapprom = response.json();
     kanapprom.then((kanaptabs) => {
       printProduct(kanaptabs); 
     });
   })
   .catch((err) => {
-    //si requete impossible affichage message d'erreur en place de la liste de produit et message erreur console//
+    
     document.getElementById("items").innertext =
       "Désolé un problème est survenu pendant le chargement de notre catalogue.veuillez réessayer ultérieurement";
-    console.log("Problème API page script.js");
+    
   });
 
   //Fonction affichage dynamique des produits du Json insérer dans le DOM

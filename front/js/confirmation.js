@@ -9,8 +9,7 @@ let idOrder = document.querySelector("#orderId");
 const urlConfirmation = window.location.search; 
 const urlSearchParams = new URLSearchParams(urlConfirmation);
 idOrder.innerHTML = urlSearchParams.get('orderId'); //récupère la clé orderId et l'insère dans le span
-localStorage.clear();
-//localStorage.clear(); // vide le localStorage
+
  }
 
  printId();

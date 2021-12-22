@@ -1,6 +1,6 @@
-//Initialisation du local storage
+//Récupération du panier dans le localStorage
 let productOnLocalStorage = JSON.parse(localStorage.getItem("products"));
-//console.table(productOnLocalStorage);
+
 const textEmptyCart = document.querySelector("#cart__items");
 
 //Fonction principal recap de tout les fonctions Produits
@@ -47,16 +47,17 @@ function printCart() {
       const emptyCart = `<p>Votre panier est vide</p>`;
       textEmptyCart.innerHTML = emptyCart;
     }
+  }else {
+  productOnLocalStorage = [];
+  localStorage.setItem("products", JSON.stringify(productOnLocalStorage));
   }
 }
-
 
 // Fonction du Changement de la quantité des produits
 
 function changeQuantity() {
 
   let itemQuantity = document.querySelectorAll(".itemQuantity");
-  //let itemQuantity = document.querySelectorAll(".cart__item__content__settings");
   
   itemQuantity.forEach( item => {
       const itemCloset = item.closest("article");
@@ -72,9 +73,7 @@ function changeQuantity() {
 
          productOnLocalStorage.forEach( product => {
             if (product.id === id  && product.color === colorItem){ 
-                
-              
-               
+
               product.quantityProduct = newQuantity
               
             }
@@ -267,8 +266,6 @@ function validAndSubmitForm (){
   .then((data) => {
       
       localStorage.clear();
-      localStorage.setItem("orderId", data.orderId);
-
       document.location.href = `confirmation.html?orderId=${data.orderId}`;
   })
   .catch((err) => {
